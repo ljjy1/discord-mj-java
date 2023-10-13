@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.github.dmj.autoconfigure.DiscordPropertiesAutoConfig,\
+com.github.dmj.autoconfigure.DiscordBotAutoConfig

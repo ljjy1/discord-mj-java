@@ -1,0 +1,73 @@
+{"groups": [
+  {
+    "name": "discord",
+    "type": "com.github.dmj.autoconfigure.DiscordProperties",
+    "sourceType": "com.github.dmj.autoconfigure.DiscordProperties"
+  }
+],"properties": [
+  {
+    "name": "discord.enable",
+    "type": "java.lang.Boolean",
+    "defaultValue": false,
+    "description": "是否开启discord注册",
+    "sourceType": "com.github.dmj.autoconfigure.DiscordProperties"
+  },
+  {
+    "name": "discord.userKeyList",
+    "type": "java.lang.String",
+    "description": "自定义账户key 多个使用英文逗号分割",
+    "sourceType": "com.github.dmj.autoconfigure.DiscordProperties"
+  },
+  {
+    "sourceType": "com.github.dmj.autoconfigure.DiscordProperties",
+    "name": "discord.userKey.account",
+    "description": "每一个账户",
+    "type": "java.util.Map<java.lang.String,com.github.dmj.autoconfigure.DiscordAccountProperties>"
+  },
+  {
+    "name": "discord.proxy.enable",
+    "type": "java.lang.Boolean",
+    "defaultValue": false,
+    "description": "是否开启discord 代理",
+    "sourceType": "com.github.dmj.autoconfigure.DiscordProxyProperties"
+  },
+  {
+    "name": "discord.proxy.address",
+    "type": "java.lang.String",
+    "description": "代理IP地址",
+    "sourceType": "com.github.dmj.autoconfigure.DiscordProxyProperties"
+  },
+  {
+    "name": "discord.proxy.port",
+    "type": "java.lang.Integer",
+    "description": "代理端口",
+    "sourceType": "com.github.dmj.autoconfigure.DiscordProxyProperties"
+  }
+],"hints": [
+  {
+    "name": "discord.enable",
+    "values":[
+      {
+        "value": true,
+        "description": "启用"
+      },
+      {
+        "value": false,
+        "description": "禁用"
+      }
+    ]
+  },
+  {
+    "name": "discord.proxy.enable",
+    "values":[
+      {
+        "value": true,
+        "description": "启用"
+      },
+      {
+        "value": false,
+        "description": "禁用"
+      }
+    ]
+  }
+]}
