@@ -7,7 +7,7 @@ import lombok.Data;
 import java.io.Serializable;
 
 /**
- * @author zgp
+ * @author ljj1
  * @classname GetUploadFileRequest
  * @description TODO
  * @date 2023/10/14 15:53
