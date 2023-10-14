@@ -3,11 +3,16 @@ package com.github.dmj.bot;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.github.dmj.autoconfigure.DiscordAccountProperties;
 import com.github.dmj.autoconfigure.DiscordProxyProperties;
 import com.github.dmj.enums.MjMsgStatus;
 import com.github.dmj.model.MjMsg;
 import com.github.dmj.queue.MessageQueue;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import com.neovisionaries.ws.client.WebSocketFactory;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
@@ -21,11 +26,14 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.util.DigestUtils;
 
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -40,6 +48,9 @@ import java.util.regex.Pattern;
 public class DiscordBot extends ListenerAdapter {
 
     private final DiscordAccountProperties discordAccountProperties;
+
+
+    private final Cache<String, String> cache;
 
     /**
      * 初始化机器人
@@ -60,6 +71,12 @@ public class DiscordBot extends ListenerAdapter {
         JDA jda = jdaBuilder.build().awaitReady();
         //注册监听事件
         jda.addEventListener(this);
+        cache = CacheBuilder.newBuilder()
+                //设置最大500容量
+                .maximumSize(500)
+                // 根据写入时间设置3秒逐出
+                .expireAfterWrite(3, TimeUnit.SECONDS)
+                .build();
         log.info("启用userKey:[{}],token:[{}]机器人成功",discordAccountProperties.getUserKey(),discordAccountProperties.getBotToken());
     }
 
@@ -142,6 +159,24 @@ public class DiscordBot extends ListenerAdapter {
         if (message.getMessageReference() != null)
             mjMsg.setReferenceMsgId(message.getMessageReference().getMessageId());
 
+        try {
+            // 创建ObjectMapper对象
+            ObjectMapper mapper = new ObjectMapper();
+            // 设置输出有序的JSON字符串
+            mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+            // 将对象转换为JSON字符串
+            String json = mapper.writeValueAsString(mjMsg);
+            //当前json用于幂等处理
+            //将信息MD5
+            String md5 = DigestUtils.md5DigestAsHex(json.getBytes(StandardCharsets.UTF_8));
+            //判断是否在缓存中
+            if(cache.getIfPresent(md5) != null){
+                return;
+            }
+            cache.put(md5,md5);
+        } catch (JsonProcessingException e) {
+            //转换失败了不处理 正常发送消息
+        }
         log.debug("收到Received消息:{}",JSONUtil.toJsonStr(mjMsg));
         MessageQueue.getInstance().putMsg(mjMsg);
 
@@ -203,7 +238,24 @@ public class DiscordBot extends ListenerAdapter {
 
         if (message.getMessageReference() != null)
             mjMsg.setReferenceMsgId(message.getMessageReference().getMessageId());
-
+        try {
+            // 创建ObjectMapper对象
+            ObjectMapper mapper = new ObjectMapper();
+            // 设置输出有序的JSON字符串
+            mapper.configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true);
+            // 将对象转换为JSON字符串
+            String json = mapper.writeValueAsString(mjMsg);
+            //当前json用于幂等处理
+            //将信息MD5
+            String md5 = DigestUtils.md5DigestAsHex(json.getBytes(StandardCharsets.UTF_8));
+            //判断是否在缓存中
+            if(cache.getIfPresent(md5) != null){
+                return;
+            }
+            cache.put(md5,md5);
+        } catch (JsonProcessingException e) {
+            //转换失败了不处理 正常发送消息
+        }
         log.debug("收到Update消息:{}",JSONUtil.toJsonStr(mjMsg));
         MessageQueue.getInstance().putMsg(mjMsg);
     }
