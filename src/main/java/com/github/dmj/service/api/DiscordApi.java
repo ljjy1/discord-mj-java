@@ -448,12 +448,6 @@ public class DiscordApi {
             if(response2.getStatus() != 200){
                 throw new DiscordMjJavaException("上传文件到discord状态异常 [The upload file to discord is abnormal. Procedure]");
             }
-
-            String body2 = response2.body();
-            if(StrUtil.isBlank(body2)){
-                throw new DiscordMjJavaException("上传文件到discord 返回体为空 [The return body of a uploaded file to discord is empty]");
-            }
-            System.out.println(body2);
             returnMap.put("uploadUrl",uploadUrl);
             returnMap.put("uploadFilename",uploadFilename);
             return returnMap;
