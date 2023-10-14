@@ -6,13 +6,13 @@ import com.github.dmj.listener.MjMsgNotify;
 import com.github.dmj.service.DiscordService;
 import com.github.dmj.service.api.DiscordApi;
 import com.github.dmj.util.PropertyUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
 import java.util.Iterator;
@@ -25,7 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @description 配置读取装配类
  * @date 2023/10/11 9:42
  */
-@Configuration
+
 @ConditionalOnProperty(name = "discord.enable",havingValue = "true")
 public class DiscordPropertiesAutoConfig implements ApplicationContextAware , EnvironmentAware {
 
@@ -108,7 +108,7 @@ public class DiscordPropertiesAutoConfig implements ApplicationContextAware , En
     }
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
+    public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
+        DiscordPropertiesAutoConfig.applicationContext = applicationContext;
     }
 }

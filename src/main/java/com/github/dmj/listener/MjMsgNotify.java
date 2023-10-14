@@ -5,7 +5,6 @@ import com.github.dmj.autoconfigure.DiscordPropertiesAutoConfig;
 import com.github.dmj.model.MjMsg;
 import com.github.dmj.queue.MessageQueue;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -21,8 +20,10 @@ import java.util.concurrent.Executors;
  * @date 2023/10/11 16:10
  */
 @Slf4j
-@Component
 public class MjMsgNotify {
+
+    public MjMsgNotify() {
+    }
 
     private static final ExecutorService executorService;
     /**

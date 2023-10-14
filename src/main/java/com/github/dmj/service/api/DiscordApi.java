@@ -38,24 +38,24 @@ public class DiscordApi {
     /**
      * 连接超时时间 单位毫秒
      */
-    private Integer connectTimeOut = 5000;
+    private final Integer connectTimeOut = 5000;
 
 
-    private String uploadAttachmentUrl;
-    private String sendMessageUrl;
+    private final String uploadAttachmentUrl;
+    private final String sendMessageUrl;
 
-    private String triggerUrl = Constants.TRIGGER_URL;
+    private final String triggerUrl = Constants.TRIGGER_URL;
 
-    private DiscordAccountProperties discordAccountProperties;
-
-
-    private DiscordProxyProperties discordProxyProperties;
+    private final DiscordAccountProperties discordAccountProperties;
 
 
-    private String version = "1118961510123847772";
-    private String id = "938956540159881230";
-    private String applicationId = "936929561302675456";
-    private String sessionId = "7adb7b9360a4ee4fea41aecad803f1d9";
+    private final DiscordProxyProperties discordProxyProperties;
+
+
+    private final String version = "1118961510123847772";
+    private final String id = "938956540159881230";
+    private final String applicationId = "936929561302675456";
+    private final String sessionId = "7adb7b9360a4ee4fea41aecad803f1d9";
 
     public DiscordApi(DiscordAccountProperties discordAccountProperties,DiscordProxyProperties discordProxyProperties) {
         this.discordAccountProperties = discordAccountProperties;

@@ -31,7 +31,7 @@ public class DiscordService {
     /**
      * 文生图/图生图 返回唯一id 用于获取后续图片信息 对应机器人命令 /imagine
      */
-    private Integer imagine(ImagineInRequest request){
+    public Integer imagine(ImagineInRequest request){
         request.check();
         String userKey = request.getUserKey();
         DiscordApi discordApi = discordApiMap.get(userKey);
@@ -48,7 +48,7 @@ public class DiscordService {
      * 图片细节增强 对应图片U1 U2 U3 U4
      * @return
      */
-    private Integer upscale(UpscaleVariationRequest request){
+    public Integer upscale(UpscaleVariationRequest request){
         request.check();
         String userKey = request.getUserKey();
         DiscordApi discordApi = discordApiMap.get(userKey);
@@ -65,7 +65,7 @@ public class DiscordService {
     /**
      * 图片变化 对应图片 V1 V2 V3 V4
      */
-    private Integer variation(UpscaleVariationRequest request){
+    public Integer variation(UpscaleVariationRequest request){
         request.check();
         String userKey = request.getUserKey();
         DiscordApi discordApi = discordApiMap.get(userKey);
@@ -82,7 +82,7 @@ public class DiscordService {
     /**
      * 图片重绘 对应刷新按钮
      */
-    private Integer reset(ResetRequest request){
+    public Integer reset(ResetRequest request){
         request.check();
         String userKey = request.getUserKey();
         DiscordApi discordApi = discordApiMap.get(userKey);
@@ -99,7 +99,7 @@ public class DiscordService {
     /**
      * 单张图片 微改变Subtle
      */
-    private Integer soloLowVariation(SoloVariationRequest request){
+    public Integer soloLowVariation(SoloVariationRequest request){
         request.check();
         String userKey = request.getUserKey();
         DiscordApi discordApi = discordApiMap.get(userKey);
@@ -115,7 +115,7 @@ public class DiscordService {
     /**
      * 单张图片 较大改变Strong
      */
-    private Integer soloHighVariation(SoloVariationRequest request){
+    public Integer soloHighVariation(SoloVariationRequest request){
         request.check();
         String userKey = request.getUserKey();
         DiscordApi discordApi = discordApiMap.get(userKey);
@@ -131,7 +131,7 @@ public class DiscordService {
     /**
      * 对单张图片进行缩小操作zoomout(2x:50 1.5X 75)
      */
-    private Integer zoomOut(ZoomOutRequest request){
+    public Integer zoomOut(ZoomOutRequest request){
         request.check();
         String userKey = request.getUserKey();
         DiscordApi discordApi = discordApiMap.get(userKey);
@@ -147,7 +147,7 @@ public class DiscordService {
     /**
      * 图片进行某方向的扩展 (left/right/up/down)
      */
-    private Integer expand(ExpandRequest request){
+    public Integer expand(ExpandRequest request){
         request.check();
         String userKey = request.getUserKey();
         DiscordApi discordApi = discordApiMap.get(userKey);
@@ -167,7 +167,7 @@ public class DiscordService {
      * @param file
      * @return
      */
-    private UploadDiscordResponse uploadFileToDiscord(String userKey, File file){
+    public UploadDiscordResponse uploadFileToDiscord(String userKey, File file){
         if(file == null || file.length() == 0){
             throw new DiscordMjJavaException("上传的文件不能为空,且需要有数据 [The file to be uploaded cannot be empty and must contain data]");
         }
@@ -194,22 +194,15 @@ public class DiscordService {
 
     /**
      * 获取文件下载链接
-     * @param userKey
-     * @param uploadFilename
      * @return
      */
-    private String getUploadFileUrl(String userKey,String uploadFilename){
-        if(StrUtil.isBlank(userKey)){
-            throw new DiscordMjJavaException("用户key不能为空 [The userKey cannot be empty]");
-        }
-        if(StrUtil.isBlank(uploadFilename)){
-            throw new DiscordMjJavaException("文件名不能为空 [The uploadFilename cannot be empty]");
-        }
-        DiscordApi discordApi = discordApiMap.get(userKey);
+    public String getUploadFileUrl(GetUploadFileRequest request){
+        request.check();
+        DiscordApi discordApi = discordApiMap.get(request.getUserKey());
         if(discordApi == null){
-            throw new DiscordMjJavaException("未找到对应用户key{}配置 [The corresponding user key:{} configuration is not found]",userKey,userKey);
+            throw new DiscordMjJavaException("未找到对应用户key{}配置 [The corresponding user key:{} configuration is not found]",request.getUserKey(),request.getUserKey());
         }
-        return discordApi.message(uploadFilename);
+        return discordApi.message(request.getUploadFilename());
     }
 
 
