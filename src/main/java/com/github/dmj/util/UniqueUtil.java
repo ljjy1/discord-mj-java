@@ -1,8 +1,8 @@
 package com.github.dmj.util;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.time.Instant;
+import cn.hutool.core.util.RandomUtil;
+
+import java.util.Random;
 
 /**
  * @author ljjy1
@@ -13,19 +13,15 @@ import java.time.Instant;
 public class UniqueUtil {
 
     public static Integer generateUniqueId() {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hashBytes = digest.digest(String.valueOf(Instant.now().toEpochMilli()).getBytes());
-
-            int uniqueId = 0;
-            for (int i = 0; i < Math.min(hashBytes.length, 8); i++) {
-                uniqueId |= (hashBytes[i] & 0xFFL) << (8 * i);
-            }
-
-            return uniqueId;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
+        int digits = 11; // 指定生成的位数
+        // 生成11位数的随机纯数字字符串
+        String randomNumber = RandomUtil.randomNumbers(digits);
+        if(randomNumber.charAt(0) == '0'){
+            //如果第一位是0 随机切换到1-9
+            Random random = new Random();
+            int randomOne = random.nextInt(9) + 1;
+            randomNumber = randomOne +randomNumber.substring(1);
         }
-        return 0;
+        return Integer.parseInt(randomNumber);
     }
 }
