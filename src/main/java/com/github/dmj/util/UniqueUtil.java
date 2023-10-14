@@ -13,7 +13,7 @@ import java.util.Random;
 public class UniqueUtil {
 
     public static Integer generateUniqueId() {
-        int digits = 11; // 指定生成的位数
+        int digits = 9; // 指定生成的位数
         // 生成11位数的随机纯数字字符串
         String randomNumber = RandomUtil.randomNumbers(digits);
         if(randomNumber.charAt(0) == '0'){
