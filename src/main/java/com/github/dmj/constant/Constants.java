@@ -12,6 +12,8 @@ public class Constants {
     public static String UPLOAD_ATTACHMENT_URL = "https://discord.com/api/v9/channels/{}/attachments";
     public static String SEND_MESSAGE_URL = "https://discord.com/api/v9/channels/{}/messages";
 
+    public static String LOGIN = "https://discord.com/api/v9/auth/login";
+
 
 
 

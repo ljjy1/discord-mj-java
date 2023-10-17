@@ -19,6 +19,17 @@ public class DiscordAccountProperties {
      * 用户token
      */
     private String userToken;
+
+    /**
+     * discord账号
+     */
+    private String user;
+
+    /**
+     * discord密码
+     */
+    private String password;
+
     /**
      * 当前用户下应用机器人token
      */

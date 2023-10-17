@@ -14,6 +14,8 @@ import com.github.dmj.autoconfigure.DiscordProxyProperties;
 import com.github.dmj.constant.Constants;
 import com.github.dmj.error.DiscordMjJavaException;
 import com.github.dmj.model.*;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -51,6 +54,8 @@ public class DiscordApi {
 
     private final DiscordProxyProperties discordProxyProperties;
 
+    private final Cache<String, String> cache;
+
 
     private final String version = "1118961510123847772";
     private final String id = "938956540159881230";
@@ -62,7 +67,74 @@ public class DiscordApi {
         this.discordProxyProperties = discordProxyProperties;
         uploadAttachmentUrl = StrUtil.format(Constants.UPLOAD_ATTACHMENT_URL, discordAccountProperties.getChannelId());
         sendMessageUrl = StrUtil.format(Constants.SEND_MESSAGE_URL, discordAccountProperties.getChannelId());
+
+        cache = CacheBuilder.newBuilder()
+                //设置最大500容量
+                .maximumSize(10)
+                // 根据写入时间设置6个小时逐出
+                .expireAfterWrite(6, TimeUnit.HOURS)
+                .build();
     }
+
+
+
+    private String getUserToken(){
+        if(StrUtil.isNotBlank(discordAccountProperties.getUserToken())){
+            return discordAccountProperties.getUserToken();
+        }
+        if(StrUtil.hasBlank(discordAccountProperties.getUser(),discordAccountProperties.getPassword())){
+            throw new DiscordMjJavaException("请确认是否正确配置了账号token或者账号密码 [Check whether the account token or password is correctly configured]");
+        }
+
+        //从缓存中获取token
+        String userToken = cache.getIfPresent("userToken");
+        if(StrUtil.isBlank(userToken)){
+
+            HttpRequest post = HttpUtil.createPost(Constants.LOGIN).timeout(connectTimeOut)
+                    .header("Content-Type", "application/json");
+            //判断是否使用代理 与是否请求 discord.com的网站
+            if (discordProxyProperties.isEnable() && StrUtil.containsAnyIgnoreCase(Constants.LOGIN, "discord.com")) {
+                Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(discordProxyProperties.getAddress(), discordProxyProperties.getPort()));
+                post.setProxy(proxy);
+            }
+
+            Map<String, Object> paramsMap = new HashMap<>();
+            paramsMap.put("gift_code_sku_id",null);
+            paramsMap.put("login",discordAccountProperties.getUser());
+            paramsMap.put("login_source",null);
+            paramsMap.put("password",discordAccountProperties.getPassword());
+            paramsMap.put("undelete",null);
+            HttpResponse response = null;
+            try {
+                response = post.body(JSONUtil.toJsonStr(paramsMap)).execute();
+                int status = response.getStatus();
+                if(status != 200){
+                    throw new DiscordMjJavaException("调用登录API不成功,状态:{}",status);
+                }
+                String body = response.body();
+                if(StrUtil.isBlank(body)){
+                    throw new DiscordMjJavaException("调用登录API不成功,响应body为空");
+                }
+                //获取响应token
+                JSONObject jsonObject = JSONUtil.parseObj(body);
+                String token = jsonObject.getStr("token");
+                if(StrUtil.isBlank(token)){
+                    throw new DiscordMjJavaException("调用登录API不成功,响应body内token为空");
+                }
+                userToken = token;
+                //存入缓存
+                cache.put("userToken",userToken);
+            } catch (Exception e) {
+                throw new DiscordMjJavaException("discord登录异常:{}",e.getMessage());
+            } finally {
+                if (response != null) {
+                    response.close();
+                }
+            }
+        }
+        return userToken;
+    }
+
 
 
     /**
@@ -71,10 +143,9 @@ public class DiscordApi {
      * @return
      */
     public HttpRequest requestGet(String url) {
-
         HttpRequest get = HttpUtil.createGet(url).timeout(connectTimeOut)
                 .header("Content-Type", "application/json")
-                .header("Authorization", discordAccountProperties.getUserToken());
+                .header("Authorization", getUserToken());
         //判断是否使用代理 与是否请求 discord.com的网站
         if (discordProxyProperties.isEnable() && StrUtil.containsAnyIgnoreCase(url, "discord.com")) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(discordProxyProperties.getAddress(), discordProxyProperties.getPort()));
@@ -92,7 +163,7 @@ public class DiscordApi {
     public HttpRequest requestPostJson(String url) {
         HttpRequest post = HttpUtil.createPost(url).timeout(connectTimeOut)
                 .header("Content-Type", "application/json")
-                .header("Authorization", discordAccountProperties.getUserToken());
+                .header("Authorization", getUserToken());
         //判断是否使用代理 与是否请求 discord.com的网站
         if (discordProxyProperties.isEnable() && StrUtil.containsAnyIgnoreCase(url, "discord.com")) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(discordProxyProperties.getAddress(), discordProxyProperties.getPort()));
@@ -109,7 +180,7 @@ public class DiscordApi {
     public HttpRequest requestPostForm(String url) {
         HttpRequest post = HttpUtil.createPost(url).timeout(connectTimeOut)
                 .header("Content-Type", "multipart/form-data")
-                .header("Authorization", discordAccountProperties.getUserToken());
+                .header("Authorization", getUserToken());
         //判断是否使用代理 与是否请求 discord.com的网站
         if (discordProxyProperties.isEnable() && StrUtil.containsAnyIgnoreCase(url, "discord.com")) {
             Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(discordProxyProperties.getAddress(), discordProxyProperties.getPort()));

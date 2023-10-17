@@ -48,7 +48,9 @@ public class DiscordPropertiesAutoConfig implements ApplicationContextAware , En
                 throw new DiscordMjJavaException("请填写账号key! [Please fill in the userKey]");
             }
             if(StrUtil.isBlank(discordAccountProperties.getUserToken())){
-                throw new DiscordMjJavaException("请填写账号token! [Please fill in the userToken]");
+                if(StrUtil.hasBlank(discordAccountProperties.getUser(),discordAccountProperties.getPassword())){
+                    throw new DiscordMjJavaException("请填写账号token,或者配置账号密码! [Enter the account token or set the user password ]");
+                }
             }
             if(StrUtil.isBlank(discordAccountProperties.getBotToken())){
                 throw new DiscordMjJavaException("请填写机器人token! [Please fill in the botToken]");
