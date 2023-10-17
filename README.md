@@ -58,25 +58,25 @@ discord:
     # 等待执行的个数 (超过将会抛弃任务)
     waitSize: 10
 
-    #第二个账号配置  没有多账号不需要配置(这些key都需要删除 否则会抛出异常)
-    user2:
-      userKey: user2
-      # discord 登录token
-      userToken: xxxx
-      # discord 账号 与discord 登录token有一个配置即可
-      user:
-      # discord 密码 与discord 登录token有一个配置即可
-      password:
-      # 创建的机器人token
-      botToken: xxxx
-      # 服务器ID
-      guildId: 1160515508215496725
-      # 频道ID
-      channelId: 1160756682226413598
-      # 并发执行的任务个数 (单个discord同时发布多个绘图任务会提示并发过大 目前我只有同步发布5个出现过)
-      concurSize: 3
-      # 等待执行的个数 (超过将会抛弃任务)
-      waitSize: 10
+  #第二个账号配置  没有多账号不需要配置(这些key都需要删除 否则会抛出异常)
+  user2:
+    userKey: user2
+    # discord 登录token
+    userToken: xxxx
+    # discord 账号 与discord 登录token有一个配置即可
+    user:
+    # discord 密码 与discord 登录token有一个配置即可
+    password:
+    # 创建的机器人token
+    botToken: xxxx
+    # 服务器ID
+    guildId: 1160515508215496725
+    # 频道ID
+    channelId: 1160756682226413598
+    # 并发执行的任务个数 (单个discord同时发布多个绘图任务会提示并发过大 目前我只有同步发布5个出现过)
+    concurSize: 3
+    # 等待执行的个数 (超过将会抛弃任务)
+    waitSize: 10
   proxy:
     # 是否开启代理
     enable: true
