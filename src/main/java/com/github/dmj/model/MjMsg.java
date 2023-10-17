@@ -81,7 +81,7 @@ public class MjMsg implements Serializable {
     /**
      * 指令列表  用户确认图片可以有哪些执行
      */
-    private List<ComponentDetail> components;
+    private List<List<ComponentDetail>> components;
 
 
     @Data

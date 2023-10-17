@@ -20,6 +20,7 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import okhttp3.OkHttpClient;
 import org.jetbrains.annotations.NotNull;
@@ -152,16 +153,24 @@ public class DiscordBot extends ListenerAdapter {
         } else {
             mjMsg.setStatus(MjMsgStatus.END);
             //获取指令按钮
-            List<Button> buttons = message.getButtons();
-            if (CollUtil.isNotEmpty(buttons)) {
-                List<MjMsg.ComponentDetail> components = new ArrayList<>();
-                for (Button button : buttons) {
-                    String id = button.getId();
-                    String label = button.getLabel();
-                    MjMsg.ComponentDetail componentDetail = new MjMsg.ComponentDetail();
-                    componentDetail.setId(id);
-                    componentDetail.setLabel(label);
-                    components.add(componentDetail);
+
+            List<ActionRow> actionRows = message.getActionRows();
+            if(CollUtil.isNotEmpty(actionRows)){
+                List<List<MjMsg.ComponentDetail>> components = new ArrayList<>();
+                for (ActionRow actionRow : actionRows) {
+                    List<Button> buttons = actionRow.getButtons();
+                    if(CollUtil.isNotEmpty(buttons)){
+                        List<MjMsg.ComponentDetail> innerComponents = new ArrayList<>();
+                        for (Button button : buttons) {
+                            String id = button.getId();
+                            String label = button.getLabel();
+                            MjMsg.ComponentDetail componentDetail = new MjMsg.ComponentDetail();
+                            componentDetail.setId(id);
+                            componentDetail.setLabel(label);
+                            innerComponents.add(componentDetail);
+                        }
+                        components.add(innerComponents);
+                    }
                 }
                 mjMsg.setComponents(components);
             }
