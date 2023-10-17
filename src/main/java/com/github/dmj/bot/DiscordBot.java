@@ -81,10 +81,26 @@ public class DiscordBot extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         //把所有消息整合到一个队列里面
         String userKey = discordAccountProperties.getUserKey();
+        String guildIdConfig = discordAccountProperties.getGuildId();
+        String channelIdConfig = discordAccountProperties.getChannelId();
         Message message = event.getMessage();
 
         //判断消息是不是MJ机器人的    //直接退出
         if (!message.getAuthor().getId().equals("936929561302675456")) return;
+
+        Guild guild = message.getGuild();
+        String guildId = guild.getId();
+        //判断服务器是否为配置的服务器
+        if(!guildId.equals(guildIdConfig)){
+            return;
+        }
+
+        MessageChannel channel = message.getChannel();
+        String channelId = channel.getId();
+        //判断频道是否为配置的频道
+        if(!channelId.equals(channelIdConfig)){
+            return;
+        }
 
         //判断是不是业务系统发的消息 有业务triggerId
         String triggerIdPattern = "<#(\\w+?)#>";
@@ -107,12 +123,10 @@ public class DiscordBot extends ListenerAdapter {
         mjMsg.setTriggerId(triggerId);
 
 
-        MessageChannel channel = message.getChannel();
-        mjMsg.setChannelId(channel.getId());
+        mjMsg.setChannelId(channelId);
         mjMsg.setChannelName(channel.getName());
 
-        Guild guild = message.getGuild();
-        mjMsg.setGuildId(guild.getId());
+        mjMsg.setGuildId(guildId);
         mjMsg.setGuildName(guild.getName());
 
 
@@ -174,11 +188,27 @@ public class DiscordBot extends ListenerAdapter {
     public void onMessageUpdate(@NotNull MessageUpdateEvent event) {
         //把所有消息整合到一个队列里面
         String userKey = discordAccountProperties.getUserKey();
+        String guildIdConfig = discordAccountProperties.getGuildId();
+        String channelIdConfig = discordAccountProperties.getChannelId();
+
         Message message = event.getMessage();
 
         //判断消息是不是MJ机器人的
         if (!message.getAuthor().getId().equals("936929561302675456")) {
             //直接退出
+            return;
+        }
+        Guild guild = message.getGuild();
+        String guildId = guild.getId();
+        //判断服务器是否为配置的服务器
+        if(!guildId.equals(guildIdConfig)){
+            return;
+        }
+
+        MessageChannel channel = message.getChannel();
+        String channelId = channel.getId();
+        //判断频道是否为配置的频道
+        if(!channelId.equals(channelIdConfig)){
             return;
         }
         //判断是不是业务系统发的消息 有业务triggerId
@@ -200,12 +230,10 @@ public class DiscordBot extends ListenerAdapter {
         mjMsg.setMsgId(message.getId());
         mjMsg.setTriggerId(triggerId);
 
-        MessageChannel channel = message.getChannel();
-        mjMsg.setChannelId(channel.getId());
+        mjMsg.setChannelId(channelId);
         mjMsg.setChannelName(channel.getName());
 
-        Guild guild = message.getGuild();
-        mjMsg.setGuildId(guild.getId());
+        mjMsg.setGuildId(guildId);
         mjMsg.setGuildName(guild.getName());
 
         List<Message.Attachment> attachments = message.getAttachments();
