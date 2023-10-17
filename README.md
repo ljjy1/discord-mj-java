@@ -1,5 +1,7 @@
 # discord-mj-spring-boot-starter
+
 > 基于 Discord 的 Midjourney API springboot中间件
+
 ## 前提条件
 
 - **这些自己提前准备好不懂就找万能的百度/谷歌**
@@ -19,17 +21,12 @@
 ```
 
 ```pom
+        <dependency>
+            <groupId>com.github.dmj</groupId>
+            <artifactId>discord-mj-spring-boot-starter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 ```
-
-
-
-
-
-
-
-
-
-
 
 ### 配置信息
 
@@ -47,9 +44,9 @@ discord:
     # discord 登录token
     userToken: xxxx
     # discord 账号 与discord 登录token有一个配置即可
-    user: 
+    user:
     # discord 密码 与discord 登录token有一个配置即可
-    password: 
+    password:
     # 创建的机器人token
     botToken: xxxx
     # 服务器ID
@@ -60,26 +57,26 @@ discord:
     concurSize: 3
     # 等待执行的个数 (超过将会抛弃任务)
     waitSize: 10
-   
-   #第二个账号配置  没有多账号不需要配置(这些key都需要删除 否则会抛出异常)
-   user2:
-    userKey: user2
-    # discord 登录token
-    userToken: xxxx
-    # discord 账号 与discord 登录token有一个配置即可
-    user: 
-    # discord 密码 与discord 登录token有一个配置即可
-    password: 
-    # 创建的机器人token
-    botToken: xxxx
-    # 服务器ID
-    guildId: 1160515508215496725
-    # 频道ID
-    channelId: 1160756682226413598
-    # 并发执行的任务个数 (单个discord同时发布多个绘图任务会提示并发过大 目前我只有同步发布5个出现过)
-    concurSize: 3
-    # 等待执行的个数 (超过将会抛弃任务)
-    waitSize: 10
+
+    #第二个账号配置  没有多账号不需要配置(这些key都需要删除 否则会抛出异常)
+    user2:
+      userKey: user2
+      # discord 登录token
+      userToken: xxxx
+      # discord 账号 与discord 登录token有一个配置即可
+      user:
+      # discord 密码 与discord 登录token有一个配置即可
+      password:
+      # 创建的机器人token
+      botToken: xxxx
+      # 服务器ID
+      guildId: 1160515508215496725
+      # 频道ID
+      channelId: 1160756682226413598
+      # 并发执行的任务个数 (单个discord同时发布多个绘图任务会提示并发过大 目前我只有同步发布5个出现过)
+      concurSize: 3
+      # 等待执行的个数 (超过将会抛弃任务)
+      waitSize: 10
   proxy:
     # 是否开启代理
     enable: true
@@ -111,7 +108,7 @@ discord:
 
 #### botToken
 
-[配置discord应用和机器人 ]([Discord Developer Portal — My Applications](https://discord.com/developers/applications) ) 
+[配置discord应用和机器人 ]([Discord Developer Portal — My Applications](https://discord.com/developers/applications) )
 
 ```text
 https://discord.com/developers/applications
@@ -123,9 +120,9 @@ https://discord.com/developers/applications
 
 ![image-20231017113300674](https://img.irelax.top/img/image-20231017113300674.png)
 
-刷新后会有一个复制token操作  获取即可
+刷新后会有一个复制token操作 获取即可
 
-#### guildId  
+#### guildId
 
 > 服务器ID
 
@@ -136,8 +133,6 @@ https://discord.com/developers/applications
 > 频道ID
 
 ![image-20231017130643041](https://img.irelax.top/img/image-20231017130643041.png)
-
-
 
 ### 案例代码
 
@@ -157,7 +152,8 @@ https://discord.com/developers/applications
 
 ### 其他需要自行处理的问题
 
-1. 一些敏感的关键词 需要自行在调用接口前 过滤 否则调用接口会报错,且自建的机器人监听不到消息 (discord发送的敏感消息只能账号本身可见)  (建议用数据库或者其他在自己本地存储起来)
+1. 一些敏感的关键词 需要自行在调用接口前 过滤 否则调用接口会报错,且自建的机器人监听不到消息 (
+   discord发送的敏感消息只能账号本身可见)  (建议用数据库或者其他在自己本地存储起来)
 
 
 
