@@ -18,7 +18,6 @@
         <hutool.version>5.8.20</hutool.version>
         <jda.version>5.0.0-alpha.12</jda.version>
         <spring.boot.version>2.3.5.RELEASE</spring.boot.version>
-        <jackson_version>2.12.4</jackson_version>
         <guava_version>30.1-jre</guava_version>
     </properties>
 
@@ -63,11 +62,6 @@
             <version>${jda.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson_version}</version>
-        </dependency>
 
         <dependency>
             <groupId>com.google.guava</groupId>
