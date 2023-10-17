@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.github.dmj</groupId>
-    <artifactId>discord-mj-java</artifactId>
+    <artifactId>discord-mj-spring-boot-starter</artifactId>
     <version>1.0.0</version>
     <packaging>jar</packaging>
 
@@ -71,7 +71,7 @@
     </dependencies>
 
     <build>
-        <finalName>discord-mj-java</finalName>
+        <finalName>discord-mj-spring-boot-starter</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
