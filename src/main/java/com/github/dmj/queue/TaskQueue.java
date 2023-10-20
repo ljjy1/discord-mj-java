@@ -1,10 +1,12 @@
 package com.github.dmj.queue;
 
+import cn.hutool.json.JSONUtil;
 import com.github.dmj.autoconfigure.DiscordAccountProperties;
 import com.github.dmj.autoconfigure.DiscordProperties;
 import com.github.dmj.autoconfigure.DiscordPropertiesAutoConfig;
 import com.github.dmj.error.DiscordMjJavaException;
 import com.github.dmj.model.DiscordTask;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -20,6 +22,7 @@ import java.util.function.Function;
  * @description 任务队列
  * @date 2023/10/11 13:23
  */
+@Slf4j
 public class TaskQueue {
 
     /**
@@ -98,7 +101,11 @@ public class TaskQueue {
                 while (true){
                     //阻塞获取队列元素 执行任务
                     DiscordTask take = taskQueue.take();
-                    take.run();
+                    try {
+                        take.run();
+                    } catch (Exception e) {
+                        log.error("任务:{} 运行异常:{}", JSONUtil.toJsonStr(take),e.getMessage(),e);
+                    }
                 }
             });
         }
