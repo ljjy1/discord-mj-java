@@ -1,6 +1,7 @@
 package com.github.dmj.queue;
 
 import com.github.dmj.model.MjMsg;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -10,6 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
  * @description  消息队列
  * @date 2023/10/11 15:47
  */
+@Slf4j
 public class MessageQueue {
 
     private static final LinkedBlockingQueue<MjMsg> msgQueue = new LinkedBlockingQueue<>(300);
@@ -33,8 +35,9 @@ public class MessageQueue {
         try {
             return msgQueue.take();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            log.error(e.getMessage(),e);
         }
+        return null;
     }
 
     /**
@@ -42,11 +45,7 @@ public class MessageQueue {
      * @param msg
      */
     public void putMsg(MjMsg msg){
-        try {
-            msgQueue.put(msg);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        msgQueue.offer(msg);
     }
 
 }

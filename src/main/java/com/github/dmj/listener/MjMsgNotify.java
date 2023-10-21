@@ -72,7 +72,12 @@ public class MjMsgNotify {
                         }
 
                     }
-
+                }else{
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        log.error(e.getMessage());
+                    }
                 }
             }
         });
